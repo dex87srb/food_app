@@ -1,22 +1,22 @@
-var key = "7ed34200a456b5963e9c2dfe236d8e0c";
-var keyID = "d0b2e34f";
+const key = "7ed34200a456b5963e9c2dfe236d8e0c";
+const keyID = "d0b2e34f";
 
-var foodSearch = document.querySelector("#food-form input");
-var foodHealth = document.getElementById("health");
-var foodDiet = document.getElementById("diet");
-var listFoodSection = document.getElementById("recipes");
-var buttonSearch = document.getElementById("button");
-var countHitNumber = document.querySelector("span.recipe-count-number");
-var labelContainer;
-var loaderContainer = document.querySelector(".loader");
+const foodSearch = document.querySelector("#food-form input");
+const foodHealth = document.getElementById("health");
+const foodDiet = document.getElementById("diet");
+const listFoodSection = document.getElementById("recipes");
+const buttonSearch = document.getElementById("button");
+const countHitNumber = document.querySelector("span.recipe-count-number");
+let labelContainer;
+const loaderContainer = document.querySelector(".loader");
 
-var selectedDiet;
-var selectedHealth;
-var urlImage;
+let selectedDiet;
+let selectedHealth;
+let urlImage;
 
-var displayNoresults;
+let displayNoresults;
 
-buttonSearch.addEventListener("click", function () {
+buttonSearch.addEventListener("click", () => {
   loaderContainer.innerHTML = "";
   if (
     foodHealth.selectedIndex === 0 ||
@@ -29,8 +29,8 @@ buttonSearch.addEventListener("click", function () {
   }
 });
 
-function getData() {
-  var newRequest = new XMLHttpRequest();
+const getData = () => {
+  const newRequest = new XMLHttpRequest();
 
   selectedHealth = foodHealth.options[foodHealth.selectedIndex].value;
   selectedDiet = foodDiet.options[foodDiet.selectedIndex].value;
@@ -43,26 +43,26 @@ function getData() {
 
   newRequest.open("GET", urlImage);
 
-  newRequest.onload = function () {
+  newRequest.onload = () => {
     if (newRequest.status === 200) {
-      var url = JSON.parse(newRequest.responseText);
+      let url = JSON.parse(newRequest.responseText);
 
       listRecipes(url);
       countHits(url);
     }
   };
   newRequest.send();
-}
+};
 
-function createFood(food) {
-  var recipesElementContainer = document.createElement("div");
+const createFood = (food) => {
+  const recipesElementContainer = document.createElement("div");
   recipesElementContainer.classList.add("recipe-element");
   listFoodSection.appendChild(recipesElementContainer);
 
   labelContainer = document.createElement("div");
   labelContainer.classList.add("labels");
 
-  var image = document.createElement("img");
+  const image = document.createElement("img");
   image.setAttribute("src", food.recipe.image);
   recipesElementContainer.appendChild(image);
 
@@ -70,9 +70,9 @@ function createFood(food) {
   recipesElementContainer.appendChild(labelContainer);
 
   createSeparateLabel(food, "p", "healthLabels");
-}
+};
 
-function listRecipes(data) {
+const listRecipes = (data) => {
   listFoodSection.innerHTML = "";
 
   if (data.hits.length === 0) {
@@ -95,50 +95,52 @@ function listRecipes(data) {
         createFood(element);
       });
   }
-}
+};
 
-function createElementFood(food, type, property) {
-  var element = document.createElement(type);
+//REST operator
+const createElementFood = (...food) => {
+  const element = document.createElement(food[1]);
   element.classList.add("label");
-  element.textContent = food.recipe[property];
+  element.textContent = food[0].recipe[food[2]];
 
   return element;
-}
+};
 
+//REST operator
 //Separate label for health array
-function createSeparateLabel(data, type, property) {
-  data.recipe[property].forEach((element) => {
-    var elementLabel = document.createElement(type);
+const createSeparateLabel = (...data) => {
+  data[0].recipe[data[2]].forEach((element) => {
+    let elementLabel = document.createElement(data[1]);
     elementLabel.classList.add("label");
     elementLabel.textContent = element;
     labelContainer.appendChild(elementLabel);
   });
-}
+};
 
 //number of hits
-function countHits(data) {
+const countHits = (data) => {
   countHitNumber.textContent = data.count;
-}
+};
 
 //loader animation and data load function
-function loader_Data() {
+const loader_Data = () => {
   if (alphaN(foodSearch.value) === false) {
     alert("You can only enter numbers and letters");
   } else {
-    var loaderDisplay = document.createElement("img");
+    let loaderDisplay = document.createElement("img");
     loaderDisplay.setAttribute("src", "./img/loader.gif");
     loaderContainer.appendChild(loaderDisplay);
 
-    setTimeout(function () {
+    setTimeout(() => {
       loaderContainer.removeChild(loaderDisplay);
       getData();
     }, 2000);
   }
-}
+};
 
 //check if input is a combination of letter and numbers
-var alphaN = function alphanumeric(inputtxt) {
-  var letterNumber = /^[0-9a-zA-Z]+$/;
+const alphaN = (inputtxt) => {
+  let letterNumber = /^[0-9a-zA-Z]+$/;
   if (inputtxt.match(letterNumber)) {
     return true;
   } else {
